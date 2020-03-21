@@ -17,16 +17,29 @@ const ColorList = ({ colors, updateColors}) => {
   const editColor = color => {
     setEditing(true);
     setColorToEdit(color);
+
+    
   };
 
 
+
+  const refresh = () => {
+    axiosWithAuth()
+      .get("colors")
+      .then(res => {
+        updateColors(res.data);
+      })
+      .catch(err => {
+        console.log("Error: ", err);
+      });
+  };
   const saveEdit = e => {
     e.preventDefault();
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is it saved right now?
     // console.log(colorToEdit)
-    axiosWithAuth().put(`/bubbles/${colorToEdit.id}`, colorToEdit)
+    axiosWithAuth().put(`/colors/${colorToEdit.id}`, colorToEdit)
     .then(res => {
       const newColors = colors.map(x => {
         if (x.id == colorToEdit.id) {
@@ -42,12 +55,22 @@ const ColorList = ({ colors, updateColors}) => {
     .catch(err => {
       console.log("Error: ", err);
     });
+
     
   };
-
   const deleteColor = color => {
     // make a delete request to delete this color
-  };
+    axiosWithAuth()
+    .delete(`colors/${color.id}`)
+    .then(res => {
+      setColorToEdit(initialColor);
+      setEditing(false);
+      refresh();
+    })
+    .catch(err => {
+      console.log("Error: ", err);
+    });
+};
 
   return (
     <div className="colors-wrap">
