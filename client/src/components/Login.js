@@ -23,7 +23,7 @@ const handleSubmit = e => {
         // console.log(res.data.payload)
 
         localStorage.setItem("token", res.data.payload) // set token to local storage
-        props.history.push("/bubbles"); 
+        props.history.push("/colors"); 
     
     })
     .catch( err => {
